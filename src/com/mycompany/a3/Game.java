@@ -1,15 +1,23 @@
 
 package com.mycompany.a3;
+import java.io.IOException;
+import java.io.InputStream;
+
 import com.codename1.charts.util.ColorUtil;
+import com.codename1.media.Media;
+import com.codename1.media.MediaManager;
 import com.codename1.ui.Command;
 import com.codename1.ui.Container;
+import com.codename1.ui.Display;
 import com.codename1.ui.Form;
 import com.codename1.ui.Label;
 import com.codename1.ui.TextField;
 import com.codename1.ui.Toolbar;
 import com.codename1.ui.events.*;
+import com.codename1.ui.geom.Point;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
+import com.codename1.ui.util.UITimer;
 import com.mycompany.a3.commands.AboutCommand;
 import com.mycompany.a3.commands.AddAsteroidCommand;
 import com.mycompany.a3.commands.AddNonPlayerShipCommand;
@@ -36,7 +44,13 @@ import com.mycompany.a3.commands.TurnLeftCommand;
 import com.mycompany.a3.commands.TurnRightCommand;
 import com.mycompany.a3.commands.UndoCommand;
 
-public class Game extends Form {
+public class Game extends Form implements IRunnable {
+	
+	
+	private UITimer timer;
+	private boolean pause;
+	
+	private Sound introMusic;
 	
 	private GameWorld gw;
 	// A boolean containing whether or not the user is attempting to quit the game
@@ -84,13 +98,24 @@ public class Game extends Form {
 	
 	public Game() {
 		
+		//sound
+		introMusic = new Sound("intro1.wav");
+		
+		introMusic.run();
+		
 		//make GameWorld
 		gw = new GameWorld();
 		
 		
+		//timer and pause
+		timer = new UITimer(this);
+		pause = false;
+		timer.schedule(10, !pause, this);
+		
 		//make views
 		statusView = new PointsView();
 		mapView = new MapView();
+		
 		
 		//make command panel
 		command = new CommandPanel(gw);
@@ -163,6 +188,16 @@ public class Game extends Form {
 		gw.init();
 		this.show();
 		//play();
+		//setup mapView
+		gw.setXBOUND(mapView.getWidth());
+		gw.setYBOUND(mapView.getHeight());
+		System.out.println("The game map has width of " + gw.getXBOUND());
+		System.out.println("The game map has height of " + gw.getYBOUND());
+		
+		gw.setPntRelToParent(new Point(mapView.getX(), mapView.getY()));
+		
+		System.out.println("The game map X orgin is " + gw.getPntRelToParent().getX());
+		System.out.println("The game map Y orgin is " + gw.getPntRelToParent().getY());
 		
 		//==============================================================================
 		//make tool bars
@@ -189,6 +224,9 @@ public class Game extends Form {
 		myToolbar.addCommandToLeftSideMenu(asteroidCollision);
 		myToolbar.addCommandToLeftSideMenu(tick);
 		myToolbar.addCommandToLeftSideMenu(quitC);
+		
+		
+		//sound
 		
 		
 		
@@ -307,8 +345,18 @@ public class Game extends Form {
 	}*/
 	// Quits the game
 	
+	public Sound getIntroMusic() {
+		return introMusic;
+	}
+
 	public void quitGame()
 	{
 		System.exit(0);
+	}
+	@Override
+	public void run() {
+		gw.tick();
+		mapView.repaint();
+		
 	}	
 }

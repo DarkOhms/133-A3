@@ -44,6 +44,11 @@ public abstract class GameObject {
 	public void setLocationY(double locationY) {
 		this.locationY = locationY;
 	}
-	
+	public int getIntLocationY() {
+		return (int)locationY;
+	}
+	public int getIntLocationX() {
+		return (int)locationX;
+	}
 
 }

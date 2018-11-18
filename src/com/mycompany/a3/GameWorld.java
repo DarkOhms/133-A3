@@ -5,9 +5,13 @@ import java.util.Observable;
 import java.util.Random;
 import java.util.Vector;
 
+import com.codename1.ui.geom.Point;
+
 public class GameWorld extends Observable {
-	private int XBOUND = 1024;
-	private int YBOUND = 768;
+	private int XBOUND;
+	private int YBOUND;
+	private Point pntRelToParent;
+
 	private int playerScore;
 	private int playerLives;
 	private int elapsedGameTime;
@@ -73,10 +77,9 @@ public class GameWorld extends Observable {
 	}
 	
 	public void addPlayerShip() {
-		//create a new player ship object
-		PlayerShip playerShip = new PlayerShip();
+		
 		//add playerShip to game objects with special position
-		store.add(0,playerShip);
+		store.add(0,PlayerShip.getShip());
 		//print to console
 		System.out.println("A new PlayerShip has been created");
 		update();
@@ -425,6 +428,31 @@ public class GameWorld extends Observable {
 		this.setChanged();
 		this.notifyObservers(new ProxyGameWorld(this));
 	}
+
+	public int getXBOUND() {
+		return XBOUND;
+	}
+
+	public void setXBOUND(int xBOUND) {
+		XBOUND = xBOUND;
+	}
+
+	public int getYBOUND() {
+		return YBOUND;
+	}
+
+	public void setYBOUND(int yBOUND) {
+		YBOUND = yBOUND;
+	}
+	
+	public Point getPntRelToParent() {
+		return pntRelToParent;
+	}
+	
+	public void setPntRelToParent(Point pntRelToParent) {
+		this.pntRelToParent = pntRelToParent;
+	}
+	
 
 	
 }
