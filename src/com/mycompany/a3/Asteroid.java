@@ -1,21 +1,22 @@
 package com.mycompany.a3;
 
 import com.codename1.charts.util.ColorUtil;
+import com.codename1.ui.Graphics;
+import com.codename1.ui.geom.Point;
 
-public class Asteroid extends MoveableObject {
+public class Asteroid extends MoveableObject implements IDrawable{
 
-	private int size;
-	
-
-	public int getSize() {
-		return size;
-	}
 
 
 	public Asteroid(){
 		
 		this.setColor(ColorUtil.GRAY);
-		size = this.getRandom().nextInt(24) + 6;
+		setSize(getRandom().nextInt(24) + 6);
 		this.setDirection(this.getRandom().nextInt(359));
+		
+	}
+	
+	public void draw(Graphics g, Point pntRelToParent) {
+		
 	}
 }

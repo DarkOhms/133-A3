@@ -4,9 +4,7 @@ public abstract class Ship extends MoveableObject {
 	private MissileLauncher launcher;
 	private int missileCount;
 	
-	public Ship(double locationX, double locationY) {
-		this.setLocationX(locationX);
-		this.setLocationY(locationY);
+	public Ship() {
 		//synch ship start location to launcher start location
 		launcher = new MissileLauncher(this);
 	}

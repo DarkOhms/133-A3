@@ -31,4 +31,19 @@ public class ProxyGameWorld extends GameWorld implements IGameWorld {
 		
 		return gw.getMissiles();
 	}
+	
+	
+	public int getXBOUND() {
+		return gw.getXBOUND();
+	}
+	
+	public int getYBOUND() {
+		return gw.getYBOUND();
+	}
+	
+	public boolean getSound() {
+		return gw.getSound();
+	}
+	
+	
 }

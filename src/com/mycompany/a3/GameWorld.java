@@ -16,12 +16,18 @@ public class GameWorld extends Observable {
 	private int playerLives;
 	private int elapsedGameTime;
 	
-	private Random random = new Random();
+	private Random random;
 	//private Vector<GameObject> store = new Vector<GameObject>();
+	private Sound introMusic;
+	private boolean sound;
 	
-	private GameObjectsCollection store = new GameObjectsCollection();
+	private GameObjectsCollection store;
 	
-	
+	{
+		store = new GameObjectsCollection();
+		random = new Random();
+	}
+		
 	//methods for generating and checking random locations for new objects
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	private double randomXLocation() {
@@ -87,7 +93,8 @@ public class GameWorld extends Observable {
 	
 	public void addNonPlayerShip() {
 		//create a new non player ship object, must have new location parameters
-		NonPlayerShip nonPlayerShip = new NonPlayerShip(newXLocation(), newYLocation());
+		NonPlayerShip nonPlayerShip = new NonPlayerShip();
+		setRandomLocation(nonPlayerShip);
 		//add playerShip to game objects
 		store.add(nonPlayerShip);
 		//print to console
@@ -116,7 +123,6 @@ public class GameWorld extends Observable {
 		}else {
 			System.out.println("Speed is at Maximum");
 		}
-		update();
 	}
 	
 	public void decreaseSpeed() {
@@ -129,14 +135,13 @@ public class GameWorld extends Observable {
 				System.out.println("Speed is already zero.");
 			}
 		}
-		update();
 	}
 	
 	public void turnLeft() {
 		//we know element 0 is the player ship because on init()
 		if(store.elementAt(0) instanceof PlayerShip) {
 			PlayerShip mObj = (PlayerShip)store.elementAt(0);
-			mObj.steer(-1);
+			mObj.steer(-5);
 		}
 		update();
 	}
@@ -145,7 +150,7 @@ public class GameWorld extends Observable {
 		//we know element 0 is the player ship because on init()
 		if(store.elementAt(0) instanceof PlayerShip) {
 			PlayerShip mObj = (PlayerShip)store.elementAt(0);
-			mObj.steer(1);
+			mObj.steer(5);
 		}
 		update();
 	}
@@ -387,16 +392,13 @@ public class GameWorld extends Observable {
 		update();
 	}
 	
-	public void map() {
-		for(int i = 0; i < store.size(); i++) {
-			System.out.println(store.elementAt(i).toString());
-		}
-	}
-	
 	//the order here gives us information on the initial elements 
 	// i.e. player ship is element 0
 	public void init() {
+		GameObject.setGameWorld(new ProxyGameWorld(this));
 		addPlayerShip();
+		introMusic = new Sound("intro1.wav");
+		setSound(true);
 		playerScore = 0;
 		playerLives = 3;
 		update();
@@ -453,6 +455,24 @@ public class GameWorld extends Observable {
 		this.pntRelToParent = pntRelToParent;
 	}
 	
+	public Sound getIntroMusic() {
+		return introMusic;
+	}
+	public void setSound(boolean sound) {
+		this.sound = sound;
+		if(sound) {
+			introMusic.run();
+			sound = false;
+		}else {
+			introMusic.pause();
+			sound = true;
+		}
+		update();
+	}
+	
+	public boolean getSound() {
+		return sound;
+	}
 
 	
 }

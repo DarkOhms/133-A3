@@ -3,26 +3,21 @@ package com.mycompany.a3.commands;
 import com.codename1.ui.Command;
 import com.codename1.ui.events.ActionEvent;
 import com.mycompany.a3.Game;
+import com.mycompany.a3.GameWorld;
 
 public class SoundCommand extends Command {
-	private Game g;
+	private GameWorld gw;
 	boolean paused;
-	public SoundCommand(Game g) {
+	public SoundCommand(GameWorld gw) {
 		
 		super("Sound");
-		this.g = g;
-		paused = false;
+		this.gw = gw;
 		// TODO Auto-generated constructor stub
 	}
 	public void actionPerformed(ActionEvent e) {
 		System.out.println("SoundCommand invoked.");
-		if(paused) {
-			g.getIntroMusic().play();
-			paused = false;
-		}else {
-			g.getIntroMusic().pause();
-			paused = true;
-		}
+		//toggle sound
+		gw.setSound(!gw.getSound());
 		
 	}
 }

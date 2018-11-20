@@ -9,11 +9,14 @@ public class PlayerShip extends Ship implements ISteerable, IDrawable {
 	//singleton
 	private static PlayerShip theShip;
 	
+	
 	private PlayerShip(){
 		//start PlayerShip in the center
-		super(512,384);
+		this.setLocationX(getWorldXbound()/2);
+		this.setLocationY(getWorldYbound()/2);
 		this.setMissileCount(10);
-		this.setColor(ColorUtil.GREEN);
+		this.setColor(ColorUtil.BLUE);
+		this.setSize(120);
 	}
 	
 	//singleton
@@ -26,8 +29,8 @@ public class PlayerShip extends Ship implements ISteerable, IDrawable {
 	}
 	
 	public void hyperspace() {
-		this.setLocationX(512);
-		this.setLocationY(384);
+		this.setLocationX(getWorldXbound()/2);
+		this.setLocationY(getWorldYbound()/2);
 	}
 	
 	public void reArm() {
@@ -39,35 +42,36 @@ public class PlayerShip extends Ship implements ISteerable, IDrawable {
 	}
 	
 	public void draw(Graphics g, Point pntRelToParent) {
+		//get map origin
 		int mapOriginX = (int) pntRelToParent.getX();
 		int mapOriginY = (int) pntRelToParent.getY();
-		//make triangle
-		int x1 = mapOriginX + (int)this.getIntLocationX() -20;
-		int x2 = mapOriginX + (int)this.getIntLocationX();
-		int x3 = mapOriginX + (int)this.getIntLocationX()+20;
-		
-		int y1 = mapOriginY + (int)this.getIntLocationY() -20;
-		int y2 = mapOriginY + (int)this.getIntLocationY();
-		int y3 = mapOriginY + (int)this.getIntLocationY()+20;
-				
-		int[] xPoints = new int[] {mapOriginX + (int)this.getIntLocationX() -20, mapOriginX +(int)this.getIntLocationX(), mapOriginX +(int)this.getIntLocationX()+20};
-		int[] yPoints = new int[] {mapOriginY + (int)this.getIntLocationY() -20, mapOriginY + (int)this.getIntLocationY(), mapOriginY + (int)this.getIntLocationY()+20};
+		//get location on map
+		int locationX = mapOriginX + (int)this.getIntLocationX() + getSize()/2;
+		int locationY = mapOriginY + (int)this.getIntLocationY() + getSize()/2;
 		
 		
+		//initial triangle points
+		
+		int[] xPoints = {-getSize(), 0, getSize()};
+		int[] yPoints = {getSize(), -getSize(), getSize()};
+		
+		//add ship location and angle
+		for(int i =0; i < xPoints.length; i++) {
+			//ship attitude
+			double theta = Math.toRadians(this.getDirection());
+			int x = xPoints[i];
+			int y = yPoints[i];
+			xPoints[i] = (int)(x*Math.cos(theta) - y*Math.sin(theta));
+			yPoints[i] = (int)(x*Math.sin(theta) + y*Math.cos(theta));
+			//ship location
+			xPoints[i] += locationX;
+			yPoints[i] += locationY;
+		}
 		
 		g.setColor(this.getColor());
-		g.fillTriangle(x1, y1, x2, y2, x3, y3);
-		g.setAlpha(255);
-		//g.fillPolygon(xPoints, yPoints, 3); 
+		g.fillPolygon(xPoints, yPoints, 3); 
 		
-		int currX = (int) this.getIntLocationX();
-		int currY = (int) this.getIntLocationY();
-		int centerX = currX + 40/2; // Simulate getSize / 2
-		int centerY = currY + 40/2;
-		g.setColor(this.getColor());
-		// CIRCLE
-		g.drawArc((int)this.getIntLocationX() + mapOriginX, (int)this.getIntLocationY()+ mapOriginY, centerX, centerY, 0, 360);
-		
+	
 		
 	}
 	

@@ -9,12 +9,30 @@ public abstract class GameObject {
 	private double locationX;
 	private double locationY;
 	private Random random;
-
+	private int size;
+	private static ProxyGameWorld proxy;
+	private static int worldXbound;
+	private static int worldYbound;
+	
+	//constructor takes a ProxyGameWorld so it can update worldX/Ybound
+	
+	public static void setGameWorld(ProxyGameWorld myProxy) {
+		proxy = myProxy;
+	}
+	
+	
 	{
 		random = new Random();
 	}
 	
 	
+	public int getSize() {
+		return size;
+	}
+	
+	public void setSize(int size) {
+		this.size = size;
+	}
 	@Override
 	public String toString() {
 		return "GameObject [color=" + color + ", locationX=" + Math.round(locationX*10)/10.0 + ", locationY=" + Math.round(locationY*10)/10.0 + "]";
@@ -51,4 +69,14 @@ public abstract class GameObject {
 		return (int)locationX;
 	}
 
+	public int getWorldXbound() {
+		//update before returning
+		worldXbound = proxy.getXBOUND();
+		return worldXbound;
+	}
+	
+	public int getWorldYbound() {
+		worldYbound = proxy.getYBOUND();
+		return worldYbound;
+	}
 }

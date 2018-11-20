@@ -49,9 +49,7 @@ public class Game extends Form implements IRunnable {
 	
 	private UITimer timer;
 	private boolean pause;
-	
-	private Sound introMusic;
-	
+		
 	private GameWorld gw;
 	// A boolean containing whether or not the user is attempting to quit the game
 	//private boolean isQuitting;
@@ -98,23 +96,18 @@ public class Game extends Form implements IRunnable {
 	
 	public Game() {
 		
-		//sound
-		introMusic = new Sound("intro1.wav");
-		
-		introMusic.run();
-		
-		//make GameWorld
-		gw = new GameWorld();
-		
-		
 		//timer and pause
 		timer = new UITimer(this);
 		pause = false;
-		timer.schedule(10, !pause, this);
+		timer.schedule(30, !pause, this);
 		
 		//make views
 		statusView = new PointsView();
 		mapView = new MapView();
+		
+		//make GameWorld
+		gw = new GameWorld();
+		
 		
 		
 		//make command panel
@@ -125,7 +118,7 @@ public class Game extends Form implements IRunnable {
 		savC = new SaveCommand(this);
 		unC = new UndoCommand(this);
 		abC = new AboutCommand(this);
-		soundC = new SoundCommand(this);
+		soundC = new SoundCommand(gw);
 		quitC = new QuitCommand(this);
 		
 		//make main commands
@@ -149,12 +142,17 @@ public class Game extends Form implements IRunnable {
 		asteroidCollision = new AsteroidCollisionCommand(gw);
 		tick = new TickCommand(gw);
 		
-		
 		//set layout and add views and command panel
 		setLayout(new BorderLayout());
 		add(BorderLayout.NORTH, statusView);
 		add(BorderLayout.WEST, command);
 		add(BorderLayout.CENTER, mapView);
+		show();
+		
+		//initialize the game world
+		gw.setXBOUND(mapView.getWidth());
+		gw.setYBOUND(mapView.getHeight());
+		gw.init();
 		
 		//adding observers
 		gw.addObserver(mapView);
@@ -185,12 +183,8 @@ public class Game extends Form implements IRunnable {
 		addKeyListener('t', tick);
 		
 		//initialize the gameworld then show it
-		gw.init();
-		this.show();
 		//play();
 		//setup mapView
-		gw.setXBOUND(mapView.getWidth());
-		gw.setYBOUND(mapView.getHeight());
 		System.out.println("The game map has width of " + gw.getXBOUND());
 		System.out.println("The game map has height of " + gw.getYBOUND());
 		
@@ -227,7 +221,7 @@ public class Game extends Form implements IRunnable {
 		
 		
 		//sound
-		
+		show();
 		
 		
 	}
@@ -345,8 +339,8 @@ public class Game extends Form implements IRunnable {
 	}*/
 	// Quits the game
 	
-	public Sound getIntroMusic() {
-		return introMusic;
+	public PointsView getStatusView() {
+		return statusView;
 	}
 
 	public void quitGame()

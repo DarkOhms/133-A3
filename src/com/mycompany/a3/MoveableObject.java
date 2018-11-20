@@ -12,6 +12,11 @@ public class MoveableObject extends GameObject implements IMoveable {
 	
 	
 	public void move() {
+		if((this.getIntLocationX() + this.getSize() > this.getWorldXbound()) || (this.getIntLocationX() + this.getSize() < 0))
+			this.setDirection(-this.getDirection());
+		if((this.getIntLocationY() + this.getSize() > this.getWorldYbound()) || (this.getIntLocationY() + this.getSize() < 0))
+			this.setDirection(this.getDirection() + 180);
+		
 		this.setLocationX(this.getLocationX() + Math.sin((direction/180.0)*Math.PI)*speed);
 		this.setLocationY(this.getLocationY() - Math.cos((direction/180.0)*Math.PI)*speed);
 	}

@@ -34,7 +34,7 @@ public class PointsView extends Container implements Observer {
 		missilesLabel = new Label("MISSILES: ");
 		missiles = new Label("  ");
 		soundLabel = new Label("SOUND");
-		sound = new Label("  ");
+		sound = new Label(" ON ");
 		//add styles
 		getAllStyles().setBgColor(ColorUtil.BLACK);
 		getAllStyles().setBgTransparency(255);
@@ -77,12 +77,16 @@ public class PointsView extends Container implements Observer {
 		
 	}
 	
-	
 	public void update(Observable o, Object arg) {
 		IGameWorld gw = (IGameWorld) arg;
 		lives.setText(Integer.toString(gw.getPlayerLives()));
 		score.setText(Integer.toString(gw.getPlayerScore()));
 		missiles.setText(Integer.toString(gw.getMissiles()));
+		if(gw.getSound()) {
+			sound.setText(" ON ");
+		}else {
+			sound.setText(" OFF ");
+		}
 		this.repaint();
 	}
 }

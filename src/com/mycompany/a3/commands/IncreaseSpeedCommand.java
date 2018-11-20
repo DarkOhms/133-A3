@@ -13,7 +13,7 @@ public class IncreaseSpeedCommand extends Command{
 		// TODO Auto-generated constructor stub
 	}
 	public void actionPerformed(ActionEvent e) {
-		gw.increaseSpeed();
+			gw.increaseSpeed();			
 		
 	}
 

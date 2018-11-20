@@ -5,8 +5,7 @@ import com.codename1.charts.util.ColorUtil;
 public class NonPlayerShip extends Ship {
 	private int size;
 	
-	public NonPlayerShip(double locationX, double locationY){
-		super(locationX, locationY);
+	public NonPlayerShip(){
 		
 		if(this.getRandom().nextInt(3) < 2){
 			size = 10;//small
