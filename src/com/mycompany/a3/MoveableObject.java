@@ -13,9 +13,9 @@ public class MoveableObject extends GameObject implements IMoveable {
 	
 	public void move() {
 		if((this.getIntLocationX() + this.getSize() > this.getWorldXbound()) || (this.getIntLocationX() + this.getSize() < 0))
-			this.setDirection(-this.getDirection());
+			rebound();
 		if((this.getIntLocationY() + this.getSize() > this.getWorldYbound()) || (this.getIntLocationY() + this.getSize() < 0))
-			this.setDirection(this.getDirection() + 180);
+			rebound();
 		
 		this.setLocationX(this.getLocationX() + Math.sin((direction/180.0)*Math.PI)*speed);
 		this.setLocationY(this.getLocationY() - Math.cos((direction/180.0)*Math.PI)*speed);
@@ -36,6 +36,11 @@ public class MoveableObject extends GameObject implements IMoveable {
 	public void setDirection(int direction) {
 	
 		this.direction = direction%360;
+	}
+	
+	public void rebound() {
+		this.setDirection(this.getDirection() + 180);
+		//bad physics, update this later
 	}
 
 	@Override

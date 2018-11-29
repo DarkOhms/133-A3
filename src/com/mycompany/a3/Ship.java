@@ -8,6 +8,12 @@ public abstract class Ship extends MoveableObject {
 		//synch ship start location to launcher start location
 		launcher = new MissileLauncher(this);
 	}
+	public MissileLauncher getLauncher() {
+		return launcher;
+	}
+	public void setLauncher(MissileLauncher launcher) {
+		this.launcher = launcher;
+	}
 	//missile count restraint will need to be handled in GameWorld
 	public void fireMissile() {
 		

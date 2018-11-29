@@ -31,6 +31,7 @@ import com.mycompany.a3.commands.HyperspaceCommand;
 import com.mycompany.a3.commands.IncreaseSpeedCommand;
 import com.mycompany.a3.commands.NPSKillShotCommand;
 import com.mycompany.a3.commands.NewCommand;
+import com.mycompany.a3.commands.PauseCommand;
 import com.mycompany.a3.commands.PlayerCrashCommand;
 import com.mycompany.a3.commands.PlayerKillShotCommand;
 import com.mycompany.a3.commands.PlayerNPSCrashCommand;
@@ -67,6 +68,7 @@ public class Game extends Form implements IRunnable {
 	private UndoCommand unC;
 	private AboutCommand abC;
 	private SoundCommand soundC;
+	private PauseCommand pauseC;
 	private QuitCommand	quitC;
 	
 	//main commands
@@ -119,6 +121,7 @@ public class Game extends Form implements IRunnable {
 		unC = new UndoCommand(this);
 		abC = new AboutCommand(this);
 		soundC = new SoundCommand(gw);
+		pauseC = new PauseCommand(this);
 		quitC = new QuitCommand(this);
 		
 		//make main commands
@@ -206,6 +209,7 @@ public class Game extends Form implements IRunnable {
 		myToolbar.addCommandToOverflowMenu(unC);
 		myToolbar.addCommandToOverflowMenu(soundC);
 		myToolbar.addCommandToOverflowMenu(abC);
+		myToolbar.addCommandToOverflowMenu(pauseC);
 		myToolbar.addCommandToOverflowMenu(quitC);
 		
 		//left side menu
@@ -339,6 +343,15 @@ public class Game extends Form implements IRunnable {
 	}*/
 	// Quits the game
 	
+	public boolean isPause() {
+		return pause;
+	}
+
+	public void setPause(boolean pause) {
+		this.pause = pause;
+		this.timer.schedule(30, !pause, this);
+	}
+
 	public PointsView getStatusView() {
 		return statusView;
 	}

@@ -16,14 +16,18 @@ public class PlayerShip extends Ship implements ISteerable, IDrawable {
 		this.setLocationY(getWorldYbound()/2);
 		this.setMissileCount(10);
 		this.setColor(ColorUtil.BLUE);
-		this.setSize(120);
+		this.setSize(60);
+		this.setLauncher(new MissileLauncher(this));
 	}
 	
 	//singleton
 	public static PlayerShip getShip() {
 		if(theShip == null) 
 			theShip = new PlayerShip();
-			
+		
+		if(theShip.isDestroy()) 
+			theShip.setDestroy(false);
+		
 		return theShip;
 		
 	}
@@ -38,7 +42,7 @@ public class PlayerShip extends Ship implements ISteerable, IDrawable {
 	}
 	
 	public void steer(int directionChange) {
-		this.setDirection(this.getDirection() + directionChange);
+		this.setDirection(theShip.getDirection() + directionChange);
 	}
 	
 	public void draw(Graphics g, Point pntRelToParent) {
@@ -71,8 +75,8 @@ public class PlayerShip extends Ship implements ISteerable, IDrawable {
 		g.setColor(this.getColor());
 		g.fillPolygon(xPoints, yPoints, 3); 
 		
-	
-		
+		this.getMissileLauncher().draw(g, pntRelToParent);
+				
 	}
 	
 }

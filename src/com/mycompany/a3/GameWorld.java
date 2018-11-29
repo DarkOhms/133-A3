@@ -18,7 +18,9 @@ public class GameWorld extends Observable {
 	
 	private Random random;
 	//private Vector<GameObject> store = new Vector<GameObject>();
-	private Sound introMusic;
+	private BGSound introMusic;
+	private Sound collision;
+	private Sound explosion;
 	private boolean sound;
 	
 	private GameObjectsCollection store;
@@ -152,7 +154,6 @@ public class GameWorld extends Observable {
 			PlayerShip mObj = (PlayerShip)store.elementAt(0);
 			mObj.steer(5);
 		}
-		update();
 	}
 	
 	public void rotateLauncher() {
@@ -211,7 +212,7 @@ public class GameWorld extends Observable {
 		}	
 		update();
 	}
-	
+///////////collisions////////////////////////////////////////////////////////////	
 	public void asteroidKillShot() {
 		//this just removes a missile and an asteroid if both exist
 		for(int i = 1; i < store.size(); i++) {
@@ -275,6 +276,19 @@ public class GameWorld extends Observable {
 		update();
 	}
 	
+	public void playerKillShot(int j) {
+	
+		store.remove(0);
+		playerLives--;
+		if(playerLives < 1) {
+			System.out.println("GAME OVER");
+		}else {
+			store.remove(j);
+			addPlayerShip();
+		}
+		
+	}
+	
 	public void playerCrash() {
 		//this just removes an asteroid and the player ship if there is an asteroid
 		for(int i = 1; i < store.size(); i++) {
@@ -313,6 +327,20 @@ public class GameWorld extends Observable {
 		update();
 	}
 	
+	public void playerNPSCrash(int j) {
+			
+		store.remove(0);
+		playerLives--;
+		if(playerLives < 1) {
+				System.out.println("GAME OVER");
+		}else {
+			store.remove(j);
+			addPlayerShip();
+		}
+				
+		update();
+	}
+	
 	public void asteroidNPSCollision() {
 		//this just removes a non player ship and an asteroid if both exist
 		for(int i = 1; i < store.size(); i++) {
@@ -332,6 +360,14 @@ public class GameWorld extends Observable {
 			}
 		}//end for to search for NonPlayerShips	
 		update();
+	}
+	
+	public void asteroidNPSCollision(int i, int j) {
+		
+		store.remove(i);
+		store.remove(j);
+		//play sound
+					
 	}
 	
 	public void asteroidCollision() {
@@ -355,6 +391,13 @@ public class GameWorld extends Observable {
 		update();
 	}
 	
+	//overload
+	public void asteroidCollision(int i, int j) {
+		store.remove(i);
+		store.remove(j);
+		//play asteroid collision sound
+	}
+	
 	public void playerStatus() {
 		System.out.println("===================================================================");
 		System.out.println("                         Game Status                             ");
@@ -369,15 +412,75 @@ public class GameWorld extends Observable {
 		//iterate through objects
 		for(int i = 0; i < store.size(); i++) {
 			//move objects
-			if(store.elementAt(i) instanceof IMoveable)
+			if(store.elementAt(i) instanceof IMoveable) {
 				 ((IMoveable)store.elementAt(i)).move();
+			}						 
+			//check for collision
+			for(int j = 0; j < store.size(); j++) {
+				//only check collision with other objects not self or others marked for destruction
+				if(i !=j &&( !(store.elementAt(i).isDestroy()) || !(store.elementAt(i).isDestroy()) )) {
+					if(((ICollider)store.elementAt(i)).collidesWith(store.elementAt(j))) {
+						//handle collision at GameObject
+						store.elementAt(i).handleCollision(store.elementAt(j));
+						//different collisions
+						if(store.elementAt(i) instanceof Asteroid && store.elementAt(j) instanceof Asteroid) {
+							playCollision();
+							break;
+						}
+						if(store.elementAt(i) instanceof Asteroid && store.elementAt(j) instanceof NonPlayerShip || store.elementAt(i) instanceof Asteroid && store.elementAt(j) instanceof NonPlayerShip ) {
+							playCollision();
+							break;
+						}
+						if(store.elementAt(i) instanceof PlayerShip && store.elementAt(j) instanceof NonPlayerShip) {
+							playCollision();
+							playerLives--;
+							break;
+						}
+						if(store.elementAt(i) instanceof PlayerShip && store.elementAt(j) instanceof Asteroid && !((Missile)store.elementAt(j)).isPlayerMissile() ) {
+							playCollision();
+							playerLives--;
+							break;
+						}
+						if(store.elementAt(i) instanceof PlayerShip && store.elementAt(j) instanceof Missile) {
+							playExplosion();
+							playerLives--;
+							break;
+						}else if(store.elementAt(i) instanceof Missile && store.elementAt(j) instanceof PlayerShip) {
+							playExplosion();
+							playerLives--;
+							break;
+						}
+						if(store.elementAt(i) instanceof PlayerShip && store.elementAt(j) instanceof Asteroid) {
+							playCollision();
+							playerLives--;
+							break;
+						}else if(store.elementAt(i) instanceof Asteroid && store.elementAt(j) instanceof PlayerShip) {
+							playCollision();
+							playerLives--;
+							break;
+						}
+						if(store.elementAt(i) instanceof Missile && store.elementAt(j) instanceof NonPlayerShip) {
+							playExplosion();
+							playerScore += 3;
+							break;
+						}
+						if(store.elementAt(i) instanceof Missile && store.elementAt(j) instanceof Asteroid) {
+							playExplosion();
+							playerScore++;
+							break;
+						}
+					 }
+				 }
+			}
 			//update space station blink
-			if(store.elementAt(i) instanceof SpaceStation)
+			if(store.elementAt(i) instanceof SpaceStation) {
 				//avoid divide by zero error
 				if(((SpaceStation)store.elementAt(i)).getBlinkRate() != 0)
 					if(elapsedGameTime%((SpaceStation)store.elementAt(i)).getBlinkRate() == 0) {
 						//blink
+						((SpaceStation)store.elementAt(i)).blink();
 					}
+			}
 			//update missile fuel and remove spent missiles
 			if(store.elementAt(i) instanceof Missile) {
 				 Missile missile = (Missile)store.elementAt(i);
@@ -389,6 +492,20 @@ public class GameWorld extends Observable {
 			}//end missile maintenance if
 		}//end iteration
 		elapsedGameTime++;	
+		//cleanup
+		if(((GameObject)store.elementAt(0)).isDestroy()){
+			if(playerLives < 1) {
+				System.out.println("GAME OVER");
+			}else {
+				addPlayerShip();
+			}
+		}
+		for(int i = 0; i < store.size(); i++) {
+			if(((GameObject)store.elementAt(i)).isDestroy()){
+				store.remove(i);
+				continue;
+			}
+		}
 		update();
 	}
 	
@@ -397,7 +514,9 @@ public class GameWorld extends Observable {
 	public void init() {
 		GameObject.setGameWorld(new ProxyGameWorld(this));
 		addPlayerShip();
-		introMusic = new Sound("intro1.wav");
+		introMusic = new BGSound("intro1.wav");
+		collision = new Sound("asteroidhit.wav");
+		explosion = new Sound("missilehit.wav");
 		setSound(true);
 		playerScore = 0;
 		playerLives = 3;
@@ -455,7 +574,7 @@ public class GameWorld extends Observable {
 		this.pntRelToParent = pntRelToParent;
 	}
 	
-	public Sound getIntroMusic() {
+	public BGSound getIntroMusic() {
 		return introMusic;
 	}
 	public void setSound(boolean sound) {
@@ -472,6 +591,16 @@ public class GameWorld extends Observable {
 	
 	public boolean getSound() {
 		return sound;
+	}
+	
+	public void playCollision() {
+		if(sound)
+			collision.play();
+	}
+	
+	public void playExplosion() {
+		if(sound)
+			explosion.play();
 	}
 
 	
