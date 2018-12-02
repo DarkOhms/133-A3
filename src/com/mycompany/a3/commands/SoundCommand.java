@@ -20,5 +20,6 @@ public class SoundCommand extends Command {
 		gw.setSound(!gw.getSound());
 		
 	}
+	
 }
 

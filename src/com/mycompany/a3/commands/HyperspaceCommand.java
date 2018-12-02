@@ -13,7 +13,8 @@ public class HyperspaceCommand extends Command{
 		// TODO Auto-generated constructor stub
 	}
 	public void actionPerformed(ActionEvent e) {
-		gw.hyperspace();
+		if(!gw.isPaused())
+			gw.hyperspace();
 		
 	}
 

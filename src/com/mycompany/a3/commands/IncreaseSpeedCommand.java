@@ -13,6 +13,7 @@ public class IncreaseSpeedCommand extends Command{
 		// TODO Auto-generated constructor stub
 	}
 	public void actionPerformed(ActionEvent e) {
+		if(!gw.isPaused())
 			gw.increaseSpeed();			
 		
 	}

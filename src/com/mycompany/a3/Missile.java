@@ -7,12 +7,13 @@ import com.codename1.ui.geom.Point;
 public class Missile extends MoveableObject implements IDrawable {
 	private int fuelLevel;
 	private boolean playerMissile;
+	private int MAX = 100;
 	
 	
 	public Missile(int direction, int speed, double locationX, double locationY ) {
 		
 		this.setSize(10);
-		fuelLevel = 200;
+		fuelLevel = MAX;
 		this.setDirection(direction);
 		this.setSpeed(speed + 3);
 		this.setLocationX(locationX);
@@ -32,6 +33,10 @@ public class Missile extends MoveableObject implements IDrawable {
 
 	public int getFuelLevel() {
 		return fuelLevel;
+	}
+	
+	public void maxFuelLevel() {
+		fuelLevel = MAX;
 	}
 	
 	public void burnFuel() {

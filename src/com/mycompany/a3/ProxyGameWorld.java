@@ -45,5 +45,7 @@ public class ProxyGameWorld extends GameWorld implements IGameWorld {
 		return gw.getSound();
 	}
 	
-	
+	public boolean isPaused() {
+		return gw.isPaused();
+	}
 }

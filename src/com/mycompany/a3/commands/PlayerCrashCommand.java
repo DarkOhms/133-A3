@@ -13,7 +13,8 @@ public class PlayerCrashCommand extends Command{
 		// TODO Auto-generated constructor stub
 	}
 	public void actionPerformed(ActionEvent e) {
-		gw.playerCrash();
+		if(!gw.isPaused())
+			gw.playerCrash();
 		
 	}
 

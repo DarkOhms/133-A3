@@ -13,7 +13,8 @@ public class FirePlayerMissileCommand extends Command{
 		// TODO Auto-generated constructor stub
 	}
 	public void actionPerformed(ActionEvent e) {
-		gw.firePlayerMissile();
+		if(!gw.isPaused())
+			gw.firePlayerMissile();
 		
 	}
 

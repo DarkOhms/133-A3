@@ -20,6 +20,7 @@ import com.mycompany.a3.commands.NPSKillShotCommand;
 import com.mycompany.a3.commands.PlayerCrashCommand;
 import com.mycompany.a3.commands.PlayerKillShotCommand;
 import com.mycompany.a3.commands.PlayerNPSCrashCommand;
+import com.mycompany.a3.commands.RefuelCommand;
 import com.mycompany.a3.commands.RestockMissilesCommand;
 import com.mycompany.a3.commands.RotateLauncherCommand;
 import com.mycompany.a3.commands.TickCommand;
@@ -101,6 +102,7 @@ public class CommandPanel extends Form {
 		restockMissiles.setCommand(new RestockMissilesCommand(gw));
 		add(restockMissiles);
 		
+		/* outdated commands
 		Button asteroidKillShot = new Button("Missile vs. Asteroid");
 		asteroidKillShot.getUnselectedStyle().setBgTransparency(255);
 		asteroidKillShot.setCommand(new AsteroidKillShotCommand(gw));
@@ -136,6 +138,11 @@ public class CommandPanel extends Form {
 		asteroidCollision.setCommand(new AsteroidCollisionCommand(gw));
 		add(asteroidCollision);
 		
+		*/
+		Button refuel = new Button("Refuel");
+		refuel.getUnselectedStyle().setBgTransparency(255);
+		refuel.setCommand(new RefuelCommand(gw));
+		add(refuel);
 		
 		Button tick = new Button("Tick");
 		tick.getUnselectedStyle().setBgTransparency(255);

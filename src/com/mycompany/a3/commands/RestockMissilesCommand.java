@@ -13,7 +13,8 @@ public class RestockMissilesCommand extends Command{
 		// TODO Auto-generated constructor stub
 	}
 	public void actionPerformed(ActionEvent e) {
-		gw.restockMissiles();
+		if(!gw.isPaused())
+			gw.restockMissiles();
 		
 	}
 

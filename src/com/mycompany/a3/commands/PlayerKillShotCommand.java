@@ -13,7 +13,8 @@ public class PlayerKillShotCommand extends Command{
 		// TODO Auto-generated constructor stub
 	}
 	public void actionPerformed(ActionEvent e) {
-		gw.playerKillShot();
+		if(!gw.isPaused())
+			gw.playerKillShot();
 		
 	}
 

@@ -13,7 +13,8 @@ public class AsteroidCollisionCommand extends Command{
 		// TODO Auto-generated constructor stub
 	}
 	public void actionPerformed(ActionEvent e) {
-		gw.asteroidCollision();
+		if(!gw.isPaused())
+			gw.asteroidCollision();
 		
 	}
 

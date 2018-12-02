@@ -1,5 +1,6 @@
 package com.mycompany.a3;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 public interface ICollection {
@@ -14,4 +15,5 @@ public interface ICollection {
 	public int size();
 	
 	public GameObject elementAt(int index);
+
 }

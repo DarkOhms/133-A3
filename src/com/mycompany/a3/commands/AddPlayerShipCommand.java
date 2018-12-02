@@ -13,7 +13,8 @@ public class AddPlayerShipCommand extends Command{
 		// TODO Auto-generated constructor stub
 	}
 	public void actionPerformed(ActionEvent e) {
-		gw.addPlayerShip();
+		if(!gw.isPaused())
+			gw.addPlayerShip();
 		
 	}
 

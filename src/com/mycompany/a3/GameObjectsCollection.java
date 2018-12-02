@@ -29,6 +29,15 @@ public class GameObjectsCollection implements ICollection {
 		store.remove(index);
 		
 	}
+	
+	public boolean removeAll(GameObjectsCollection c) {
+		return store.removeAll(c.getStore());
+		
+	}
+
+	public Vector<GameObject> getStore() {
+		return store;
+	}
 
 	@Override
 	public int size() {

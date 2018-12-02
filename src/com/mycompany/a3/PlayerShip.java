@@ -22,7 +22,7 @@ public class PlayerShip extends Ship implements ISteerable, IDrawable {
 	
 	//singleton
 	public static PlayerShip getShip() {
-		if(theShip == null) 
+		if(theShip == null  || theShip.isDestroy()) 
 			theShip = new PlayerShip();
 		
 		if(theShip.isDestroy()) 

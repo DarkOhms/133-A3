@@ -10,8 +10,8 @@ public class SpaceStation extends FixedObject implements IDrawable{
 	private boolean blink;
 	
 	public SpaceStation() {
-		blinkRate = (this.getRandom()).nextInt(4);
-		setSize(200);
+		blinkRate = ((this.getRandom()).nextInt(4) + 1)*10;
+		setSize(230);
 		setColor(ColorUtil.YELLOW);
 	}
 
@@ -28,12 +28,12 @@ public class SpaceStation extends FixedObject implements IDrawable{
 		int yOrigin = pntRelToParent.getY();
 		
 		if(blink) {
-			g.setColor(getColor() + 15);
+			g.setColor(ColorUtil.WHITE);
 			blink =false;
 		}else {
 			g.setColor(getColor());			
 		}
-		g.fillArc(xOrigin + getIntLocationX(), yOrigin + getIntLocationY(), getSize(), getSize()/2, 0, 180);
+		g.fillArc(xOrigin + getIntLocationX(), yOrigin + getIntLocationY(), getSize(), (int)(getSize()/1.6), 0, 180);
 	}
 
 	@Override
@@ -43,6 +43,7 @@ public class SpaceStation extends FixedObject implements IDrawable{
 			((PlayerShip)otherObject).reArm();
 		}else {
 			((MoveableObject)otherObject).rebound();
+			//missiles rebound too XD
 		}
 		
 	}

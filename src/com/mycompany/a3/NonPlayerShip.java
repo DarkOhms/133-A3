@@ -6,6 +6,9 @@ import com.codename1.ui.geom.Point;
 
 public class NonPlayerShip extends Ship implements IDrawable {
 	private int size;
+	static double[] x = new double[] { 150, 300, 415};
+	static double[] y = new double[] { 40, 88, 175};
+
 	
 	public NonPlayerShip(){
 		
@@ -14,6 +17,12 @@ public class NonPlayerShip extends Ship implements IDrawable {
 		}else {
 			size = 75;//large
 		}
+		
+		//create semi-random location
+		int xi = getRandom().nextInt(3);
+		int yi = getRandom().nextInt(3);
+		this.setLocationX(x[xi]);
+		this.setLocationY(y[yi]);
 		this.setDirection(this.getRandom().nextInt(359));
 		this.setDirection(this.getRandom().nextInt(4) + 1);
 		this.setColor(ColorUtil.GREEN);

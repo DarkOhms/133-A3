@@ -13,7 +13,8 @@ public class FireNonPlayerMissileCommand extends Command{
 		// TODO Auto-generated constructor stub
 	}
 	public void actionPerformed(ActionEvent e) {
-		gw.fireNonPlayerMissile();
+		if(!gw.isPaused())
+			gw.fireNonPlayerMissile();
 		
 	}
 

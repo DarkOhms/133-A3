@@ -13,7 +13,8 @@ public class PlayerStatusCommand extends Command{
 		// TODO Auto-generated constructor stub
 	}
 	public void actionPerformed(ActionEvent e) {
-		gw.playerStatus();
+		if(!gw.isPaused())
+			gw.playerStatus();
 		
 	}
 

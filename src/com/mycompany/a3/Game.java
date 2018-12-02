@@ -36,6 +36,7 @@ import com.mycompany.a3.commands.PlayerCrashCommand;
 import com.mycompany.a3.commands.PlayerKillShotCommand;
 import com.mycompany.a3.commands.PlayerNPSCrashCommand;
 import com.mycompany.a3.commands.QuitCommand;
+import com.mycompany.a3.commands.RefuelCommand;
 import com.mycompany.a3.commands.RestockMissilesCommand;
 import com.mycompany.a3.commands.RotateLauncherCommand;
 import com.mycompany.a3.commands.SaveCommand;
@@ -91,6 +92,7 @@ public class Game extends Form implements IRunnable {
 	private PlayerNPSCrashCommand		playerNPSCrash;
 	private AsteroidCollisionCommand	asteroidCollision;
 	private TickCommand 				tick;
+	private RefuelCommand				refuel;
 	
 	
 	
@@ -101,7 +103,7 @@ public class Game extends Form implements IRunnable {
 		//timer and pause
 		timer = new UITimer(this);
 		pause = false;
-		timer.schedule(30, !pause, this);
+		timer.schedule(50, !pause, this);
 		
 		//make views
 		statusView = new PointsView();
@@ -144,6 +146,7 @@ public class Game extends Form implements IRunnable {
 		playerNPSCrash = new PlayerNPSCrashCommand(gw);
 		asteroidCollision = new AsteroidCollisionCommand(gw);
 		tick = new TickCommand(gw);
+		refuel = new RefuelCommand(gw);
 		
 		//set layout and add views and command panel
 		setLayout(new BorderLayout());
@@ -174,6 +177,7 @@ public class Game extends Form implements IRunnable {
 		addKeyListener(-94, turnRight);
 		addKeyListener('<', rotateLauncher);
 		addKeyListener(-90, firePlayerMissile);
+		addKeyListener(0x10, firePlayerMissile);
 		addKeyListener('L', fireNonPlayerMissile);
 		addKeyListener('n', restockMissiles);
 		addKeyListener('k', asteroidKillShot);
@@ -350,6 +354,7 @@ public class Game extends Form implements IRunnable {
 	public void setPause(boolean pause) {
 		this.pause = pause;
 		this.timer.schedule(30, !pause, this);
+		gw.setPaused(pause);
 	}
 
 	public PointsView getStatusView() {
@@ -363,7 +368,6 @@ public class Game extends Form implements IRunnable {
 	@Override
 	public void run() {
 		gw.tick();
-		mapView.repaint();
 		
 	}	
 }

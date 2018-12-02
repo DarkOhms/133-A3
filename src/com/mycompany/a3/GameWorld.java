@@ -22,6 +22,8 @@ public class GameWorld extends Observable {
 	private Sound collision;
 	private Sound explosion;
 	private boolean sound;
+	private boolean paused;
+	private boolean gameOver;
 	
 	private GameObjectsCollection store;
 	
@@ -33,8 +35,8 @@ public class GameWorld extends Observable {
 	//methods for generating and checking random locations for new objects
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	private double randomXLocation() {
-
-		return random.nextInt(XBOUND - 10) + 5.0;
+		int inBounds = XBOUND - 50;
+		return (random.nextInt(inBounds)) + 25;
 		
 	}
 	
@@ -42,7 +44,7 @@ public class GameWorld extends Observable {
 		double possibleXLocation = randomXLocation();
 		
 		for(int i =0; i < store.size(); i++) {
-			if(possibleXLocation == store.elementAt(i).getLocationX())
+			if(possibleXLocation - store.elementAt(i).getLocationX() <= 20.0)
 				possibleXLocation = newXLocation();
 		}
 		
@@ -53,7 +55,7 @@ public class GameWorld extends Observable {
 		double possibleYLocation = randomYLocation();
 		
 		for(int i =0; i < store.size(); i++) {
-			if(possibleYLocation == store.elementAt(i).getLocationY())
+			if(possibleYLocation - store.elementAt(i).getLocationY() <= 20.0)
 				possibleYLocation = newYLocation();
 		}
 		
@@ -61,8 +63,8 @@ public class GameWorld extends Observable {
 	}
 	
 	private double randomYLocation() {
-
-		return random.nextInt(YBOUND - 10) + 5.0;
+		int inBounds = YBOUND - 50;
+		return random.nextInt(inBounds) + 25;
 		
 	}
 	
@@ -76,7 +78,7 @@ public class GameWorld extends Observable {
 		//create a new asteroid object
 		Asteroid asteroid = new Asteroid();
 		//set random location
-		setRandomLocation(asteroid);
+		//setRandomLocation(asteroid);
 		//add asteroid to game objects
 		store.add(asteroid);
 		//print to console
@@ -96,7 +98,6 @@ public class GameWorld extends Observable {
 	public void addNonPlayerShip() {
 		//create a new non player ship object, must have new location parameters
 		NonPlayerShip nonPlayerShip = new NonPlayerShip();
-		setRandomLocation(nonPlayerShip);
 		//add playerShip to game objects
 		store.add(nonPlayerShip);
 		//print to console
@@ -108,12 +109,13 @@ public class GameWorld extends Observable {
 		//create a new SpaceStation object
 		SpaceStation spaceStation = new SpaceStation();
 		//set random location
-		setRandomLocation(spaceStation);
+		spaceStation.setLocationX(750);
+		spaceStation.setLocationY(260);
 		//add spaceStation to game objects
 		store.add(spaceStation);
 		//print to console
 		System.out.println("A new Space Station has been created");
-		update();
+		
 	}
 	
 	//increases player speed if player speed is less than 10
@@ -145,7 +147,7 @@ public class GameWorld extends Observable {
 			PlayerShip mObj = (PlayerShip)store.elementAt(0);
 			mObj.steer(-5);
 		}
-		update();
+		
 	}
 	
 	public void turnRight() {
@@ -162,7 +164,7 @@ public class GameWorld extends Observable {
 			MissileLauncher mObj = ((PlayerShip) store.elementAt(0)).getMissileLauncher();
 			mObj.steer(-5);
 		}
-		update();
+		
 	}
 	
 	public void firePlayerMissile() {
@@ -177,7 +179,7 @@ public class GameWorld extends Observable {
 				System.out.println("Out of Missiles!");
 			}
 		}
-		update();
+		
 	}
 	
 	public void fireNonPlayerMissile() {
@@ -191,7 +193,7 @@ public class GameWorld extends Observable {
 				System.out.println("No NPS to fire.");
 			}
 		}
-		update();
+		
 	}
 	
 	public void hyperspace() {
@@ -201,7 +203,7 @@ public class GameWorld extends Observable {
 			((PlayerShip) store.elementAt(0)).hyperspace();
 			
 		}	
-		update();
+		
 	}
 	
 	public void restockMissiles() {
@@ -210,7 +212,7 @@ public class GameWorld extends Observable {
 			((PlayerShip) store.elementAt(0)).reArm();
 			
 		}	
-		update();
+		
 	}
 ///////////collisions////////////////////////////////////////////////////////////	
 	public void asteroidKillShot() {
@@ -232,7 +234,7 @@ public class GameWorld extends Observable {
 				System.out.println("There are no in flight missiles");
 			}
 		}//end for to search for Missiles	
-		update();
+		
 	}
 	
 	public void npsKillShot() {
@@ -254,7 +256,7 @@ public class GameWorld extends Observable {
 				System.out.println("There are no missiles");
 			}
 		}//end for to search for Missiles
-		update();
+		
 	}
 	
 	public void playerKillShot() {
@@ -273,7 +275,7 @@ public class GameWorld extends Observable {
 				System.out.println("There are no missiles");
 			}
 		}//end for to search for Missiles
-		update();
+		
 	}
 	
 	public void playerKillShot(int j) {
@@ -305,7 +307,7 @@ public class GameWorld extends Observable {
 				System.out.println("There are no asteroids");
 			}
 		}//end for to search for Asteroids	
-		update();
+		
 	}
 	
 	public void playerNPSCrash() {
@@ -324,7 +326,7 @@ public class GameWorld extends Observable {
 				System.out.println("There are no non player ships");
 			}
 		}//end for to search for NonPlayerShips	
-		update();
+		
 	}
 	
 	public void playerNPSCrash(int j) {
@@ -338,7 +340,7 @@ public class GameWorld extends Observable {
 			addPlayerShip();
 		}
 				
-		update();
+		
 	}
 	
 	public void asteroidNPSCollision() {
@@ -359,7 +361,7 @@ public class GameWorld extends Observable {
 				System.out.println("There are no non player ships");
 			}
 		}//end for to search for NonPlayerShips	
-		update();
+		
 	}
 	
 	public void asteroidNPSCollision(int i, int j) {
@@ -388,7 +390,7 @@ public class GameWorld extends Observable {
 				System.out.println("There aren't any asteroids.");
 			}
 		}//end for to search for NonPlayerShips	
-		update();
+		
 	}
 	
 	//overload
@@ -409,106 +411,19 @@ public class GameWorld extends Observable {
 	}
 	
 	public void tick() {
-		//iterate through objects
-		for(int i = 0; i < store.size(); i++) {
-			//move objects
-			if(store.elementAt(i) instanceof IMoveable) {
-				 ((IMoveable)store.elementAt(i)).move();
-			}						 
-			//check for collision
-			for(int j = 0; j < store.size(); j++) {
-				//only check collision with other objects not self or others marked for destruction
-				if(i !=j &&( !(store.elementAt(i).isDestroy()) || !(store.elementAt(i).isDestroy()) )) {
-					if(((ICollider)store.elementAt(i)).collidesWith(store.elementAt(j))) {
-						//handle collision at GameObject
-						store.elementAt(i).handleCollision(store.elementAt(j));
-						//different collisions
-						if(store.elementAt(i) instanceof Asteroid && store.elementAt(j) instanceof Asteroid) {
-							playCollision();
-							break;
-						}
-						if(store.elementAt(i) instanceof Asteroid && store.elementAt(j) instanceof NonPlayerShip || store.elementAt(i) instanceof Asteroid && store.elementAt(j) instanceof NonPlayerShip ) {
-							playCollision();
-							break;
-						}
-						if(store.elementAt(i) instanceof PlayerShip && store.elementAt(j) instanceof NonPlayerShip) {
-							playCollision();
-							playerLives--;
-							break;
-						}
-						if(store.elementAt(i) instanceof PlayerShip && store.elementAt(j) instanceof Asteroid && !((Missile)store.elementAt(j)).isPlayerMissile() ) {
-							playCollision();
-							playerLives--;
-							break;
-						}
-						if(store.elementAt(i) instanceof PlayerShip && store.elementAt(j) instanceof Missile) {
-							playExplosion();
-							playerLives--;
-							break;
-						}else if(store.elementAt(i) instanceof Missile && store.elementAt(j) instanceof PlayerShip) {
-							playExplosion();
-							playerLives--;
-							break;
-						}
-						if(store.elementAt(i) instanceof PlayerShip && store.elementAt(j) instanceof Asteroid) {
-							playCollision();
-							playerLives--;
-							break;
-						}else if(store.elementAt(i) instanceof Asteroid && store.elementAt(j) instanceof PlayerShip) {
-							playCollision();
-							playerLives--;
-							break;
-						}
-						if(store.elementAt(i) instanceof Missile && store.elementAt(j) instanceof NonPlayerShip) {
-							playExplosion();
-							playerScore += 3;
-							break;
-						}
-						if(store.elementAt(i) instanceof Missile && store.elementAt(j) instanceof Asteroid) {
-							playExplosion();
-							playerScore++;
-							break;
-						}
-					 }
-				 }
-			}
-			//update space station blink
-			if(store.elementAt(i) instanceof SpaceStation) {
-				//avoid divide by zero error
-				if(((SpaceStation)store.elementAt(i)).getBlinkRate() != 0)
-					if(elapsedGameTime%((SpaceStation)store.elementAt(i)).getBlinkRate() == 0) {
-						//blink
-						((SpaceStation)store.elementAt(i)).blink();
-					}
-			}
-			//update missile fuel and remove spent missiles
-			if(store.elementAt(i) instanceof Missile) {
-				 Missile missile = (Missile)store.elementAt(i);
-				 missile.burnFuel();
-				 if(missile.getFuelLevel() < 1) {
-					 store.remove(i);
-					 continue;
-				 }
-			}//end missile maintenance if
-		}//end iteration
-		elapsedGameTime++;	
+		
+		moveObjects();
+		checkForCollisions();
+		//update space station blink
+		blink();
+		updateMissileFuel();
 		//cleanup
-		if(((GameObject)store.elementAt(0)).isDestroy()){
-			if(playerLives < 1) {
-				System.out.println("GAME OVER");
-			}else {
-				addPlayerShip();
-			}
-		}
-		for(int i = 0; i < store.size(); i++) {
-			if(((GameObject)store.elementAt(i)).isDestroy()){
-				store.remove(i);
-				continue;
-			}
-		}
+		cleanup();
+		elapsedGameTime++;	
 		update();
 	}
 	
+
 	//the order here gives us information on the initial elements 
 	// i.e. player ship is element 0
 	public void init() {
@@ -517,10 +432,11 @@ public class GameWorld extends Observable {
 		introMusic = new BGSound("intro1.wav");
 		collision = new Sound("asteroidhit.wav");
 		explosion = new Sound("missilehit.wav");
+		paused = false;
 		setSound(true);
 		playerScore = 0;
 		playerLives = 3;
-		update();
+		
 	}
 
 	
@@ -545,9 +461,29 @@ public class GameWorld extends Observable {
 		return ((PlayerShip)store.elementAt(0)).getMissileCount();
 	}
 	
+	public void refuelMissile() {
+		for(int i = 0; i < store.size(); i++) {
+			//update missile fuel and remove spent missiles
+			if(store.elementAt(i) instanceof Missile && store.elementAt(i).isSelected() ) {
+				Missile missile = (Missile)store.elementAt(i);
+				missile.maxFuelLevel();
+				System.out.println("Missile Refueled");
+			}//end missile maintenance if
+		}//end check for missiles
+		update();
+	}
+	
 	private void update() {
 		this.setChanged();
 		this.notifyObservers(new ProxyGameWorld(this));
+	}
+
+	public boolean isPaused() {
+		return paused;
+	}
+
+	public void setPaused(boolean paused) {
+		this.paused = paused;
 	}
 
 	public int getXBOUND() {
@@ -586,7 +522,7 @@ public class GameWorld extends Observable {
 			introMusic.pause();
 			sound = true;
 		}
-		update();
+		
 	}
 	
 	public boolean getSound() {
@@ -602,8 +538,134 @@ public class GameWorld extends Observable {
 		if(sound)
 			explosion.play();
 	}
-
+	public boolean isGameOver() {
+		return gameOver;
+	}
 	
+	public void setGameOver(boolean gameOver) {
+		this.gameOver = gameOver;
+	}
+	public void moveObjects() {
+		
+		for(int i = 0; i < store.size(); i++) {
+			//move objects
+			if(store.elementAt(i) instanceof IMoveable) {
+				((IMoveable)store.elementAt(i)).move();
+			}
+		}//end iteration
+	
+		update();
+	}
+	
+	public void checkForCollisions() {
+
+		//check for collision
+		for(int i = 0; i < store.size(); i++) {
+			//inner loop with minimal iterations
+			for(int j = 1 + i; j < store.size(); j++) {
+				//only check collision with other objects not self or others marked for destruction
+				if(i !=j &&( !(store.elementAt(i).isDestroy()) || !(store.elementAt(i).isDestroy()) )) {
+					if(((ICollider)store.elementAt(i)).collidesWith(store.elementAt(j))) {
+						//handle collision at GameObject
+						store.elementAt(i).handleCollision(store.elementAt(j));
+						//different collisions GameWorld changes i.e. lives and sounds
+						if(store.elementAt(i) instanceof Asteroid && store.elementAt(j) instanceof Asteroid) {
+							playCollision();
+							break;
+						}
+						if(store.elementAt(i) instanceof Asteroid && store.elementAt(j) instanceof NonPlayerShip || store.elementAt(i) instanceof Asteroid && store.elementAt(j) instanceof NonPlayerShip ) {
+							playCollision();
+							break;
+						}
+						if(store.elementAt(i) instanceof PlayerShip && store.elementAt(j) instanceof NonPlayerShip) {
+							playCollision();
+							playerLives--;
+							break;
+						}
+						if(store.elementAt(i) instanceof PlayerShip && store.elementAt(j) instanceof Asteroid ) {
+							playCollision();
+							playerLives--;
+							break;
+						}
+						if(store.elementAt(i) instanceof PlayerShip && store.elementAt(j) instanceof Missile && !((Missile)store.elementAt(j)).isPlayerMissile()) {
+							playExplosion();
+							playerLives--;
+							break;
+						}else if(store.elementAt(i) instanceof Missile && store.elementAt(j) instanceof PlayerShip && !((Missile)store.elementAt(i)).isPlayerMissile()) {
+							playExplosion();
+							playerLives--;
+							break;
+						}
+						if(store.elementAt(i) instanceof PlayerShip && store.elementAt(j) instanceof Asteroid) {
+							playCollision();
+							playerLives--;
+							break;
+						}else if(store.elementAt(i) instanceof Asteroid && store.elementAt(j) instanceof PlayerShip) {
+							playCollision();
+							playerLives--;
+							break;
+						}
+						if(store.elementAt(i) instanceof Missile && store.elementAt(j) instanceof NonPlayerShip) {
+							playExplosion();
+							playerScore += 3;
+							break;
+						}
+						if(store.elementAt(i) instanceof Missile && store.elementAt(j) instanceof Asteroid) {
+							playExplosion();
+							playerScore++;
+							break;
+						}
+					}//end collision check
+				}//end pre collision check
+			}//end inner loop
+		}//end outer loop
+		update();
+	}
+	
+	public void blink() {
+		for(int i = 0; i < store.size(); i++) {
+			
+			if(store.elementAt(i) instanceof SpaceStation) {
+				if(elapsedGameTime%((SpaceStation)store.elementAt(i)).getBlinkRate() == 0) {
+					//blink
+					((SpaceStation)store.elementAt(i)).blink();
+				}
+	
+			}//end find spacestation
+		}//end iteration
+		update();
+	}
+	public void updateMissileFuel() {		
+		for(int i = 0; i < store.size(); i++) {
+			//update missile fuel and remove spent missiles
+			if(store.elementAt(i) instanceof Missile) {
+				Missile missile = (Missile)store.elementAt(i);
+				missile.burnFuel();
+				if(missile.getFuelLevel() < 1) {
+					store.remove(i);
+				continue;
+				}
+			}//end missile maintenance if
+		}//end check for missiles
+		update();
+	}
+	public void cleanup() {
+		if(((GameObject)store.elementAt(0)).isDestroy()){
+			if(playerLives < 1) {
+				System.out.println("GAME OVER");
+				gameOver = true;
+			}else {
+				addPlayerShip();
+			}
+		}
+		GameObjectsCollection toDestroy = new GameObjectsCollection();
+		for(int i = 0; i < store.size(); i++) {
+			if(((GameObject)store.elementAt(i)).isDestroy()){
+				toDestroy.add(store.elementAt(i));
+			}
+		}
+		//destroy 	
+		store.removeAll(toDestroy);
+		update();
+	}
 }
-
-

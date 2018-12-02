@@ -13,7 +13,8 @@ public class TurnLeftCommand extends Command{
 		// TODO Auto-generated constructor stub
 	}
 	public void actionPerformed(ActionEvent e) {
-		gw.turnLeft();
+		if(!gw.isPaused())
+			gw.turnLeft();
 		
 	}
 

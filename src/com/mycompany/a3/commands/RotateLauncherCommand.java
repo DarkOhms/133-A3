@@ -13,7 +13,8 @@ public class RotateLauncherCommand extends Command{
 		// TODO Auto-generated constructor stub
 	}
 	public void actionPerformed(ActionEvent e) {
-		gw.rotateLauncher();
+		if(!gw.isPaused())
+			gw.rotateLauncher();
 		
 	}
 

@@ -19,6 +19,7 @@ public interface IGameWorld {
 	public int getMissiles();
 	
 	public boolean getSound();
-
+	
+	public boolean isPaused();
 	
 }

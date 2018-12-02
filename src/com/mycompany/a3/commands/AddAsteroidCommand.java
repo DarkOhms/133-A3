@@ -14,7 +14,8 @@ public class AddAsteroidCommand extends Command{
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		gw.addNewAsteroid();
+		if(!gw.isPaused()) 
+			gw.addNewAsteroid();
 		
 	}
 

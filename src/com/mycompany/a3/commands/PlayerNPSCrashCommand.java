@@ -13,7 +13,8 @@ public class PlayerNPSCrashCommand extends Command{
 		// TODO Auto-generated constructor stub
 	}
 	public void actionPerformed(ActionEvent e) {
-		gw.npsKillShot();
+		if(!gw.isPaused())
+			gw.npsKillShot();
 		
 	}
 

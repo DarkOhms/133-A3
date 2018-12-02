@@ -13,7 +13,8 @@ public class DecreaseSpeedCommand extends Command{
 		// TODO Auto-generated constructor stub
 	}
 	public void actionPerformed(ActionEvent e) {
-		gw.decreaseSpeed();
+		if(!gw.isPaused())
+			gw.decreaseSpeed();
 		
 	}
 

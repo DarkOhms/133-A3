@@ -3,8 +3,10 @@ package com.mycompany.a3;
 import java.util.Random;
 
 import com.codename1.charts.util.ColorUtil;
+import com.codename1.ui.Graphics;
+import com.codename1.ui.geom.Point;
 
-public abstract class GameObject implements ICollider {
+public abstract class GameObject implements ICollider, ISelectable {
 
 	private int color;
 	private double locationX;
@@ -15,6 +17,7 @@ public abstract class GameObject implements ICollider {
 	private static int worldXbound;
 	private static int worldYbound;
 	private boolean destroy; //marks objects for removal from the game world
+	private boolean selected;
 	
 	//constructor takes a ProxyGameWorld so it can update worldX/Ybound
 	
@@ -34,10 +37,6 @@ public abstract class GameObject implements ICollider {
 	
 	public void setSize(int size) {
 		this.size = size;
-	}
-	@Override
-	public String toString() {
-		return "GameObject [color=" + color + ", locationX=" + Math.round(locationX*10)/10.0 + ", locationY=" + Math.round(locationY*10)/10.0 + "]";
 	}
 
 	public Random getRandom() {
@@ -130,10 +129,13 @@ public abstract class GameObject implements ICollider {
 			 this.setDestroy(true);
 			 ((GameObject)otherObject).setDestroy(true);
 		 }
+		 if(otherObject instanceof SpaceStation) {
+			 ((SpaceStation)otherObject).handleCollision(this);
+		 }
 		 if(this instanceof PlayerShip && otherObject instanceof Missile && !((Missile)otherObject).isPlayerMissile()) {
 			 this.setDestroy(true);
 			 ((GameObject)otherObject).setDestroy(true);
-		 }else if(this instanceof Missile && otherObject instanceof PlayerShip) {
+		 }else if(this instanceof Missile&& !((Missile)this).isPlayerMissile() && otherObject instanceof PlayerShip) {
 			 this.setDestroy(true);
 			 ((GameObject)otherObject).setDestroy(true);
 		 }
@@ -152,5 +154,41 @@ public abstract class GameObject implements ICollider {
 			 this.setDestroy(true);
 			 ((GameObject)otherObject).setDestroy(true);
 		 }
+	}
+	public void setSelected(boolean yesNo) {
+		selected = yesNo;
+	}
+	
+	public boolean isSelected() {
+		return selected;
+	}
+	public boolean contains(Point pntRelToParent, Point pntCmpRelToPrnt) {
+		
+		int iShapeX = getSize()/2;      //added to orgin of shape rel to origin
+		int iShapeY = getSize()/2;
+		int px = pntRelToParent.getX();  //locations of pointer
+		int py = pntRelToParent.getY();
+		int xLoc = pntCmpRelToPrnt.getX() + iShapeX;
+		int yLoc = pntCmpRelToPrnt.getY() + iShapeY;
+		
+		if( (px >= xLoc) && (px <= xLoc + getSize())
+		 && (py >= yLoc) && (py <= yLoc + getSize()))
+			return true; else return false;
+		
+		
+	}
+	
+	public void draw(Graphics g, Point pntRelToParent) {
+		int iShapeX = getSize()/2;      //added to orgin of shape rel to origin
+		int iShapeY = getSize()/2;
+		int xLoc = pntRelToParent.getX() + iShapeX;
+		int yLoc = pntRelToParent.getY() + iShapeY;
+		if(this.isSelected()) {
+			g.setColor(ColorUtil.MAGENTA);
+			g.fillRect(xLoc, yLoc, iShapeX, iShapeY);
+		}else {
+			g.setColor(ColorUtil.MAGENTA);
+			g.drawRect(xLoc, yLoc, iShapeX, iShapeY);
+		}
 	}
 }
